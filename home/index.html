@@ -1098,6 +1098,37 @@
                             <div id="activeCodesList"></div>
                         </div>
                     </div>
+                    <div class="card file-upload-section">
+                        <h2>Upload Excel File</h2>
+                        <div class="assignment-options">
+                            <label>
+                                <input type="radio" name="assignmentOption" value="leastLeads" checked> 
+                                Assign to employee with least leads (default)
+                            </label>
+                            <br>
+                            <label>
+                                <input type="radio" name="assignmentOption" value="selectEmployee"> 
+                                Select specific employee
+                            </label>
+                            <select id="employeeSelect" disabled>
+                                <option value="">Select an employee</option>
+                                <!-- Options will be populated dynamically -->
+                            </select>
+                        </div>
+                        <div id="drop-area">
+                            <p>Drag and drop an Excel file here, or click to select a file</p>
+                            <input type="file" id="file-input" accept=".xlsx, .xls">
+                        </div>
+                        <button id="upload-button" disabled>Upload to an employee</button>
+                        <div id="result"></div>
+                    </div>
+                    <div id="employeeLeadsDashboard" class="card">
+                        <h3>Employee Leads Dashboard</h3>
+                        <button id="fetchLeadsDataBtn" class="btn-primary">Fetch Leads Data</button>
+                        <div id="leadsLoadingIndicator" style="display: none;">Loading...</div>
+                        <div id="employeeLeadsContent"></div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
