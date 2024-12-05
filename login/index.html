@@ -228,7 +228,7 @@
                 const loginResult = await cognito.initiateAuth(authParams).promise();
                 const idToken = loginResult.AuthenticationResult.IdToken;
                 localStorage.setItem('idToken', idToken);
-                window.location.href = '../home/';
+                window.location.href = '../home/index.html';
             } catch (error) {
                 showError('loginError', error.message);
             } finally {
