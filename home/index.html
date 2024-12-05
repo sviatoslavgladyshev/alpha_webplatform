@@ -3,61 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>LVLUP. Employer Code</title>
     <link rel="icon" href="../images/lvlup_logo.png">
-    <link rel="stylesheet" href="../styles/home_styles.css">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;1,500&display=swap");
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(#3800e7, #8a15ff);
+            height: 100vh;
+            font-family: "DM Mono", monospace;
+            font-weight: 300;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #activeCodesList {
+            max-height: 300px; /* Limit height to prevent overflow */
+            overflow-y: auto; /* Enable vertical scrolling if content overflows */
+            margin-top: 1rem;
+            width: 100%; /* Ensure the list takes the full width of the container */
+            padding: 0.5rem;
+            box-sizing: border-box; /* Include padding in width calculations */
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2.5rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            max-height: 90vh; /* Prevent the container from overflowing the viewport */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Distribute space evenly */
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 1rem;
+        }
+        section {
+            margin: 1.5rem 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            font-family: "DM Mono", monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s ease all;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        button.loading .spinner {
+            display: inline-block;
+        }
+
+        button.loading .button-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        pre {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: "DM Mono", monospace;
+            color: white;
+            margin-top: 1rem;
+            overflow: auto;
+        }
+
+        .code-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.75rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .code-item button {
+            flex-shrink: 0;
+            width: auto;
+            margin-left: 1rem;
+        }
+        .btn-secondary {
+            padding: 0.2rem 0.1rem;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            font-family: "DM Mono", monospace;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.3s ease all;
+            margin-bottom: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(1px);
+        }
+    </style>
 </head>
 <body>
-    <div class="preloader">
-        <div class="loader">
-            <div class="cube">
-                <div class="cube-face"><img src="../images/lvlup_logo.png" alt="Logo"></div>
-                <div class="cube-face"><img src="../images/lvlup_logo.png" alt="Logo"></div>
-                <div class="cube-face"><img src="../images/lvlup_logo.png" alt="Logo"></div>
-                <div class="cube-face"><img src="../images/lvlup_logo.png" alt="Logo"></div>
-                <div class="cube-face"><img src="../images/lvlup_logo.png" alt="Logo"></div>
-                <div class="cube-face"><img src="../images/lvlup_logo.png" alt="Logo"></div>
-            </div>
-        </div>
-        <div class="loading-text">Loading</div>
-    </div>
-
     <div class="container">
-        <header class="header">
-            <div class="logo">
-                <span class="logo-icon">U</span>
-                <span id="username"></span>
+        <header>
+            <h1>Employer Code Management</h1>
+            <div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 1rem;">
+                <strong>My account:</strong>
+                <span id="username" style="font-weight: bold; color: #ffdd00; text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8); font-size: 1.2rem;">Loading...</span>
+                <button id="signOutButton" onclick="signOut()" class="btn-secondary" style="width: 5rem; padding: 0.5rem;">Sign Out</button>
             </div>
-            <nav class="nav-tabs"></nav>
-            <!-- <div class="header-buttons">
-                <button id="dateRangeButton" class="date-range-button"></button>
-            </div> -->
         </header>
 
-        <div class="dashboard">
-            <div class="tab-content active" id="admin">
-                <div class="card" style="width: 100%;">
-                    <h2>Employer Code Generator</h2>
-                    <div class="code-management">
-                        <div class="code-actions">
-                            <button id="generateCodeBtn" class="btn-primary">Generate New Company Code</button>
-                            <input type="text" id="codeInput" placeholder="Enter code">
-                            <input type="text" id="employeeIdInput" placeholder="Enter employee ID">
-                            <button id="useCodeBtn" class="btn-primary">Use Code</button>
-                        </div>
-                        <div id="codeStatus"></div>
-                        <div class="code-list">
-                            <h4>Active Company Codes</h4>
-                            <div id="activeCodesList"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <section>
+            <h2>Generate Code</h2>
+            <button id="generateCodeBtn" class="btn-primary" onclick="generateCompanyCode()">
+                <span class="button-text">Generate New Company Code</span>
+                <div class="spinner"></div>
+            </button>
+            <!-- <pre id="generateResponse">Response will appear here...</pre> -->
+        </section>
+
+        <section>
+            <h2>Active Codes</h2>
+            <div id="activeCodesList">Loading active codes...</div>
+        </section>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.799.0/aws-sdk.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>
     <script>
         let username = '';
         const API_ENDPOINT = 'https://028fsljya7.execute-api.us-east-1.amazonaws.com/dev';
@@ -66,11 +190,8 @@
             const url = `${API_ENDPOINT}${path}`;
             const options = {
                 method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
             };
-
             if (payload) {
                 options.body = JSON.stringify(payload);
             }
@@ -80,92 +201,99 @@
             try {
                 const response = await fetch(url, options);
                 const data = await response.json();
-                console.log('API Response:', data);
 
                 if (!response.ok) {
                     throw new Error(data.message || 'API call failed');
                 }
-
                 return data;
             } catch (error) {
                 console.error(`Error calling API ${path}:`, error);
                 throw error;
             }
         }
-
         async function generateCompanyCode() {
             const generateCodeBtn = document.getElementById('generateCodeBtn');
-            addLoadingState(generateCodeBtn);
+            addLoadingState(generateCodeBtn); // Add loader to the button
+
             try {
-                const response = await callAPI('/employer-codes?operation=generate', 'POST', { username });
-                if (response.code) {
-                    document.getElementById('codeStatus').textContent = `New code generated: ${response.code}`;
-                    fetchActiveCodes();
-                } else {
-                    document.getElementById('codeStatus').textContent = 'Failed to generate company code';
+                if (!username) {
+                    throw new Error('Username is missing. Please ensure you are logged in.');
                 }
+
+                const response = await callAPI(`/employer-codes?operation=generate&username=${username}`, 'POST');
+                // Optionally update a response message or log the generated code
+                console.log(`New code generated: ${response.code}`);
+                await fetchActiveCodes(); // Refresh the active codes list dynamically
             } catch (error) {
-                document.getElementById('codeStatus').textContent = 'Error generating company code: ' + error.message;
+                console.error('Error generating company code:', error.message);
             } finally {
-                removeLoadingState(generateCodeBtn);
+                removeLoadingState(generateCodeBtn); // Remove loader after completion
             }
         }
 
         async function fetchActiveCodes() {
-        try {
-            const response = await callAPI(`/employer-codes?operation=fetch&username=${username}`, 'GET');
-            console.log('API Response:', response);
             const activeCodesList = document.getElementById('activeCodesList');
-            activeCodesList.innerHTML = '';
+            activeCodesList.innerHTML = '<p>Loading active codes...</p>'; // Show a loading message
 
-            if (response.codes && response.codes.length > 0) {
-                response.codes.forEach(code => {
-                    const codeItem = document.createElement('div');
-                    codeItem.className = 'code-item';
-                    codeItem.innerHTML = `
-                        <span>${code.code} (Expires: ${new Date(code.expiresAtReadable).toLocaleString()})</span>
-                        <button onclick="deleteCode('${code.code}')">Delete</button>
-                    `;
-                    activeCodesList.appendChild(codeItem);
-                });
-            } else {
-                activeCodesList.innerHTML = '<p>No active codes available.</p>';
+            try {
+                const response = await callAPI(`/employer-codes?operation=fetch&username=${username}`, 'GET');
+                activeCodesList.innerHTML = ''; // Clear existing content
+
+                if (response.codes && response.codes.length > 0) {
+                    response.codes.forEach((code) => {
+                        const codeItem = document.createElement('div');
+                        codeItem.className = 'code-item';
+                        codeItem.innerHTML = `
+                            <span>${code.code} (Expires: ${new Date(code.expiresAtReadable).toLocaleString()})</span>
+                            <button class="btn-primary" onclick="deleteCode('${code.code}')">Delete</button>
+                        `;
+                        activeCodesList.appendChild(codeItem);
+                    });
+                } else {
+                    activeCodesList.innerHTML = '<p>No active codes available.</p>';
+                }
+            } catch (error) {
+                console.error('Error fetching active codes:', error);
+                activeCodesList.innerHTML = '<p>Error loading active codes. Please try again later.</p>';
             }
-        } catch (error) {
-            console.error('Error fetching active codes:', error);
         }
-    }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const token = localStorage.getItem('idToken');
-            if (token) {
-                const decodedToken = parseJwt(token);
-                username = decodedToken['cognito:username'];
-                document.getElementById('username').textContent = username;
-            } else {
-                window.location.href = '../login/';
+        async function deleteCode(code) {
+            const confirmDelete = confirm(`Are you sure you want to delete the code: ${code}?`);
+            if (!confirmDelete) {
+                return; // Exit if the user cancels
             }
 
-            const generateCodeBtn = document.getElementById('generateCodeBtn');
-            if (generateCodeBtn) {
-                generateCodeBtn.addEventListener('click', generateCompanyCode);
+            try {
+                await callAPI(`/employer-codes?operation=delete&code=${code}`, 'DELETE');
+                console.log(`Code ${code} deleted successfully.`);
+                await fetchActiveCodes(); // Refresh the active codes list dynamically
+            } catch (error) {
+                console.error('Error deleting company code:', error.message);
             }
-
-            fetchActiveCodes();
-        });
+        }
 
         function addLoadingState(button) {
-            button.disabled = true;
-            const spinner = document.createElement('span');
-            spinner.className = 'spinner';
-            button.appendChild(spinner);
+            button.disabled = true; // Disable the button to prevent multiple clicks
+            const spinner = button.querySelector('.spinner');
+            if (spinner) {
+                spinner.style.display = 'inline-block'; // Show the spinner
+            }
+            const buttonText = button.querySelector('.button-text');
+            if (buttonText) {
+                buttonText.style.display = 'none'; // Hide the button text
+            }
         }
 
         function removeLoadingState(button) {
-            button.disabled = false;
+            button.disabled = false; // Enable the button
             const spinner = button.querySelector('.spinner');
             if (spinner) {
-                button.removeChild(spinner);
+                spinner.style.display = 'none'; // Hide the spinner
+            }
+            const buttonText = button.querySelector('.button-text');
+            if (buttonText) {
+                buttonText.style.display = 'inline'; // Show the button text
             }
         }
 
@@ -175,12 +303,53 @@
             const jsonPayload = decodeURIComponent(
                 atob(base64)
                     .split('')
-                    .map(function (c) {
-                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                    })
+                    .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
                     .join('')
             );
             return JSON.parse(jsonPayload);
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('idToken');
+            if (token) {
+                try {
+                    const decodedToken = parseJwt(token);
+                    username = decodedToken['cognito:username'];
+                    console.log('Decoded username:', username); // Debugging log
+                    document.getElementById('username').textContent = username;
+
+                    await fetchActiveCodes(); // Fetch the list of active codes
+                } catch (error) {
+                    console.error('Error decoding token:', error);
+                    document.getElementById('activeCodesList').innerHTML = '<p>Invalid token. Please log in again.</p>';
+                }
+            } else {
+                console.warn('No token found. Skipping API calls.');
+                document.getElementById('username').textContent = 'Not logged in';
+            }
+        });
+
+        function signOut() {
+            const button = document.getElementById('signOutButton');
+            setLoading(button, true);
+            try {
+                localStorage.removeItem('idToken');
+                username = '';
+                window.location.href = '../login/index.html';
+            } catch (error) {
+                console.error('Error during sign-out:', error);
+                setLoading(button, false);
+            }
+        }
+
+        function setLoading(button, isLoading) {
+            if (isLoading) {
+                button.classList.add('loading');
+                button.disabled = true;
+            } else {
+                button.classList.remove('loading');
+                button.disabled = false;
+            }
         }
     </script>
 </body>
